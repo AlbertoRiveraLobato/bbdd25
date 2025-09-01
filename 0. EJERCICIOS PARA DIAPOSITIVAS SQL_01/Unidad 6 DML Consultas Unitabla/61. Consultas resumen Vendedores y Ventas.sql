@@ -1,3 +1,5 @@
+-- Ejercicio: Consultas resumen Vendedores y Ventas.
+
 -- Creación de la base de datos de vendedores y ventas
 CREATE DATABASE ventas_db;
 USE ventas_db;
