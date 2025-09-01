@@ -1,3 +1,5 @@
+-- Código SQL para crear una base de datos de domótica en el hogar, con tablas, inserción de datos y ejemplos de vistas.
+
 -- Creación de la base de datos de domótica
 CREATE DATABASE domotica_db;
 USE domotica_db;
