@@ -1,3 +1,5 @@
+-- Ejemplos de Vistas en una Base de Datos para un Sistema de Domótica en el Hogar.
+
 -- Crear la base de datos
 CREATE DATABASE IF NOT EXISTS domotica_hogar;
 USE domotica_hogar;
