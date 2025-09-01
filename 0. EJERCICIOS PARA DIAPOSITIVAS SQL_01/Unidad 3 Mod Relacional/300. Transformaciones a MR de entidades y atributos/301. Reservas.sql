@@ -1,5 +1,5 @@
 /*
-Vamos a modelar un sistema de reservas para un hotel con las siguientes reglas:
+VAMOS a modelar un sistema de reservas para un hotel con las siguientes reglas:
 1.	Cada habitación tiene un número único, tipo y precio por noche.
 2.	Los clientes nos proporcionarán su nombre y DNI (pero no usaremos éste como identificador de cliente).
 3.	Una habitación no puede estar reservada dos veces para las mismas fechas.
