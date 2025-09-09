@@ -34,3 +34,40 @@ RENAME COLUMN `old_name` to `new_name`;
 -- Cambiar nombre columna (OPCIÓN 2) (y obligatoriamente definir tipo datos)
 ALTER TABLE `comandos`.`empresa` 
 	CHANGE COLUMN `dirección` `ciudad` VARCHAR(20);
+
+-- Añadir varias columnas a la vez
+ALTER TABLE comandos.empresa
+    ADD provincia VARCHAR(30),
+    ADD telefono VARCHAR(15);
+
+-- Modificar varias columnas a la vez
+ALTER TABLE comandos.empresa
+    MODIFY país VARCHAR(50),
+    MODIFY nombre VARCHAR(100);
+
+-- Añadir restricción UNIQUE
+ALTER TABLE comandos.empresa
+    ADD CONSTRAINT unique_nombre UNIQUE (nombre);
+
+-- Añadir restricción CHECK (MySQL 8.0+)
+ALTER TABLE comandos.empresa
+    ADD CONSTRAINT chk_pais CHECK (país IN ('España', 'Francia', 'Italia'));
+
+-- Renombrar la tabla
+RENAME TABLE comandos.empresa TO comandos.empresa_nueva;
+
+-- Añadir columna con valor por defecto
+ALTER TABLE comandos.empresa_nueva
+    ADD fecha_creacion DATE DEFAULT (CURRENT_DATE);
+
+-- Cambiar el orden de una columna
+ALTER TABLE comandos.empresa_nueva
+    MODIFY COLUMN telefono VARCHAR(15) AFTER nombre;
+
+-- Eliminar restricción UNIQUE
+ALTER TABLE comandos.empresa_nueva
+    DROP INDEX unique_nombre;
+
+-- Eliminar restricción CHECK (MySQL 8.0+)
+ALTER TABLE comandos.empresa_nueva
+    DROP CHECK chk_pais;
