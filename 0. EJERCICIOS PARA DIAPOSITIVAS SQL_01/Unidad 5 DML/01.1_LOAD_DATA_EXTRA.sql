@@ -6,7 +6,6 @@
 -- # - Comando LOAD DATA                                #
 -- # - Manejo de errores                                #
 -- #######################################################
-
 -- Creación de la tabla
 CREATE DATABASE IF NOT EXISTS carga_datos;
 USE carga_datos;

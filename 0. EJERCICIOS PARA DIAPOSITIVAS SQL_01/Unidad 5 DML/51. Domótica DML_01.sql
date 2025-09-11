@@ -123,3 +123,4 @@ CREATE TABLE Habitaciones_backup LIKE Habitaciones;
 INSERT INTO Habitaciones_backup SELECT * FROM Habitaciones;
 DROP TABLE Habitaciones;
 
+

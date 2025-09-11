@@ -6,7 +6,6 @@
 -- # - INSERT...ON DUPLICATE KEY UPDATE (UPSERT)        #
 -- # - Casos de uso reales                              #
 -- #######################################################
-
 CREATE DATABASE IF NOT EXISTS operaciones_datos;
 USE operaciones_datos;
 
