@@ -1,6 +1,6 @@
 
 -- =============================================
--- 05_DELETE_TRUNCATE_DROP.sql
+-- 04_DELETE_TRUNCATE_DROP.sql
 -- =============================================
 -- Ejemplo de uso de DELETE, TRUNCATE y DROP en MySQL/MariaDB.
 -- Contenido:

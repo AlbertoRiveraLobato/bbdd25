@@ -1,6 +1,6 @@
 
 -- =============================================
--- 06_EXPLAIN.sql
+-- 05_EXPLAIN.sql
 -- =============================================
 -- Ejemplo de uso de EXPLAIN en MySQL/MariaDB para analizar y optimizar consultas.
 -- Contenido:

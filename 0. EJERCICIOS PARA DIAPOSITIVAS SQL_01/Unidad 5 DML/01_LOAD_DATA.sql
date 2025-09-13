@@ -1,4 +1,3 @@
-';
 
 -- =============================================
 -- 01_LOAD_DATA.sql
@@ -9,7 +8,7 @@
 --   - Ejemplos de sentencias correctas de carga de datos.
 --   - Ejemplos de sentencias erróneas y explicación de los errores más comunes.
 --   - Notas sobre el formato de los archivos de entrada.
--- Requiere archivos CSV: productos.csv, empleados.csv
+--   - Requiere archivos CSV: productos.csv, empleados.csv
 
 -- =============================================
 -- CREACIÓN DE BASE DE DATOS Y TABLAS
