@@ -8,7 +8,6 @@
 -- #######################################################
 CREATE DATABASE IF NOT EXISTS operaciones_datos;
 USE operaciones_datos;
-
 -- Tabla principal de productos
 CREATE TABLE productos (
     id INT AUTO_INCREMENT PRIMARY KEY,

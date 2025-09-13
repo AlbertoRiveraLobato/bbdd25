@@ -1,12 +1,4 @@
--- #######################################################
--- # DIFERENCIAS ENTRE DELETE, TRUNCATE Y DROP           #
--- # Incluye:                                            #
--- # - Ejemplos de cada comando                          #
--- # - Comparación de características                    #
--- # - Casos de uso recomendados                         #
--- #######################################################
 
--- Ejemplo 1: DELETE sobre tabla empresa
 CREATE DATABASE IF NOT EXISTS comandos;
 USE comandos;
 
@@ -22,12 +14,9 @@ INSERT INTO empresa (nombre, ciudad, país) VALUES
 ('CARREFOUR', 'Sevilla', 'España'),
 ('LIDL', 'Berlín', 'Alemania');
 
--- Borrar por clave primaria
 DELETE FROM empresa WHERE idEmpresa = 6;
--- Borrar por otro campo (pueden ser varias filas)
 DELETE FROM empresa WHERE nombre = 'ALCAMPO';
 
--- Ejemplo 2: DELETE, TRUNCATE y DROP sobre tabla temporal
 CREATE DATABASE IF NOT EXISTS ejemplo_ddl;
 USE ejemplo_ddl;
 
@@ -38,14 +27,10 @@ CREATE TABLE temporal (
 
 INSERT INTO temporal (dato) VALUES ('A'), ('B'), ('C');
 
--- DELETE: elimina datos pero conserva la tabla
 DELETE FROM temporal WHERE dato = 'B';
--- TRUNCATE: elimina todos los datos rápidamente
 TRUNCATE TABLE temporal;
--- DROP: elimina completamente la tabla
 DROP TABLE temporal;
 
--- Ejemplo 3: Comparación avanzada y casos de uso
 CREATE DATABASE IF NOT EXISTS comparacion_operaciones;
 USE comparacion_operaciones;
 
@@ -76,26 +61,17 @@ INSERT INTO pedidos (cliente_id, producto, cantidad) VALUES
 (2, 'Teclado', 1),
 (3, 'Monitor', 1);
 
--- DELETE específico con WHERE
 DELETE FROM pedidos WHERE cliente_id = 1;
--- DELETE de todos los registros (¡CUIDADO!)
--- DELETE FROM pedidos;
--- DELETE con JOIN
 DELETE p 
 FROM pedidos p
 JOIN clientes c ON p.cliente_id = c.id 
 WHERE c.nombre = 'Carlos Ruiz';
--- DELETE con transacción (recomendado)
 START TRANSACTION;
 DELETE FROM pedidos WHERE cliente_id = 3;
 SELECT * FROM pedidos;
--- COMMIT;
 ROLLBACK; -- Para deshacer en pruebas
 
--- TRUNCATE TABLE (elimina todos los registros)
 TRUNCATE TABLE pedidos;
--- TRUNCATE no funciona con FOREIGN KEY constraints
--- Primero debemos eliminar o deshabilitar las constraints
 CREATE TABLE logs_auditoria (
     id INT AUTO_INCREMENT PRIMARY KEY,
     mensaje TEXT,
@@ -107,11 +83,7 @@ INSERT INTO logs_auditoria (mensaje) VALUES
 ('Log de prueba 3');
 TRUNCATE TABLE logs_auditoria;
 
--- DROP TABLE (elimina tabla completa)
 DROP TABLE IF EXISTS logs_auditoria;
--- DROP DATABASE (elimina base de datos completa)
--- CREATE DATABASE prueba_drop;
--- DROP DATABASE prueba_drop;
 
 /*
 DELETE vs TRUNCATE vs DROP:
@@ -135,21 +107,7 @@ DELETE vs TRUNCATE vs DROP:
    - Operación DDL irreversible
 */
 
--- Casos de uso recomendados
--- USAR DELETE cuando:
---   - Necesitas eliminar registros específicos
---   - Requieres transaccionalidad
---   - Quieres mantener la estructura
--- USAR TRUNCATE cuando:
---   - Necesitas eliminar TODOS los registros rápidamente
---   - No necesitas cláusula WHERE
---   - Quieres reiniciar contadores AUTO_INCREMENT
--- USAR DROP cuando:
---   - Quieres eliminar completamente la tabla
---   - Vas a recrear la estructura
---   - No necesitas los datos ni la estructura
 
--- Escenario: Limpieza mensual de datos
 START TRANSACTION;
 CREATE TABLE pedidos_archivo AS
 SELECT * FROM pedidos WHERE fecha < '2023-01-01';
@@ -157,3 +115,52 @@ DELETE FROM pedidos WHERE fecha < '2023-01-01';
 TRUNCATE TABLE temp_logs;
 COMMIT;
 DROP TABLE IF EXISTS temp_table_old;
+-- =============================================
+-- 05_DELETE_TRUNCATE_DROP.sql
+-- =============================================
+-- Ejemplos de uso de DELETE, TRUNCATE y DROP en MySQL.
+-- Incluye: creación de base de datos y tablas, ejemplos de borrado, y errores comunes.
+
+-- CREACIÓN DE BASE DE DATOS Y TABLAS
+CREATE DATABASE IF NOT EXISTS ejemplo_delete;
+USE ejemplo_delete;
+
+CREATE TABLE empresa (
+    idEmpresa INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50),
+    ciudad VARCHAR(50),
+    pais VARCHAR(50)
+);
+
+CREATE TABLE temporal (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    dato VARCHAR(50)
+);
+
+-- =============================================
+-- EJEMPLOS DE USO
+-- =============================================
+
+-- DELETE: elimina registros específicos
+INSERT INTO empresa (nombre, ciudad, pais) VALUES ('ALCAMPO', 'Madrid', 'España');
+DELETE FROM empresa WHERE nombre = 'ALCAMPO';
+
+-- TRUNCATE: elimina todos los registros de una tabla
+INSERT INTO temporal (dato) VALUES ('A'), ('B'), ('C');
+TRUNCATE TABLE temporal;
+
+-- DROP: elimina la tabla por completo
+DROP TABLE IF EXISTS temporal;
+
+-- =============================================
+-- ERRORES COMUNES
+-- =============================================
+
+-- Error 1: Olvidar WHERE en DELETE
+-- DELETE FROM empresa; -- Elimina todos los registros
+
+-- Error 2: TRUNCATE con restricciones FOREIGN KEY
+-- Si temporal tuviera claves foráneas, TRUNCATE fallaría
+
+-- Error 3: DROP de tabla inexistente
+-- DROP TABLE tabla_que_no_existe; -- Error: tabla no encontrada

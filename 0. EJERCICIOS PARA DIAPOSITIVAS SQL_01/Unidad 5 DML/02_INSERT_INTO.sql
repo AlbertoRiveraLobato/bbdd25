@@ -1,7 +1,3 @@
-
--- ===========================================
--- CREACIÓN DE BASE DE DATOS Y TABLA DE EJEMPLO
--- ===========================================
 CREATE DATABASE IF NOT EXISTS comandos;
 USE comandos;
 
@@ -12,17 +8,11 @@ CREATE TABLE IF NOT EXISTS empresa (
 	país VARCHAR(50)
 );
 
--- ===========================================
--- INSERCIONES DE DATOS
--- ===========================================
 
--- Insertar una empresa con todos los campos
 INSERT INTO empresa (idEmpresa, nombre, ciudad) VALUES (1, 'PRYCA', 'San Fernando');
 
--- Si quiero meter datos, sin tener que indicar la PRIMARY_KEY, debo definir esa columna como AUTO_INCREMENT
 INSERT INTO empresa (nombre, ciudad, país) VALUES ('CARREFOUR', 'San Fernando', 'España');
 
--- Varias filas de golpe
 
 INSERT INTO empresa (nombre, ciudad, país) VALUES 
 	('ECI', 'Mejorada', 'España'),
@@ -30,16 +20,63 @@ INSERT INTO empresa (nombre, ciudad, país) VALUES
 	('ALCAMPO', '', ''),
 	('LIDL', 'Berlín', 'Alemania');
 
--- ===========================================
--- EJEMPLO: CLONAR UNA TABLA CON INSERT INTO ... SELECT
--- ===========================================
 
--- Crear una tabla de respaldo con la misma estructura
 CREATE TABLE IF NOT EXISTS empresa_respaldo LIKE empresa;
 
--- Clonar todos los datos de empresa a empresa_respaldo
 INSERT INTO empresa_respaldo SELECT * FROM empresa;
 
--- También puedes clonar solo algunas columnas o filas:
--- INSERT INTO empresa_respaldo (nombre, ciudad, país)
--- SELECT nombre, ciudad, país FROM empresa WHERE ciudad = 'San Fernando';
+
+-- =============================================
+-- 02_INSERT_INTO.sql
+-- =============================================
+-- Ejemplos de uso de INSERT INTO para insertar datos en MySQL.
+-- Incluye: creación de base de datos y tablas, ejemplos de inserción, y errores comunes.
+
+-- CREACIÓN DE BASE DE DATOS Y TABLAS
+CREATE DATABASE IF NOT EXISTS ejemplo_insert;
+USE ejemplo_insert;
+
+CREATE TABLE empresa (
+	idEmpresa INT AUTO_INCREMENT PRIMARY KEY,
+	nombre VARCHAR(50),
+	ciudad VARCHAR(50),
+	pais VARCHAR(50)
+);
+
+-- =============================================
+-- EJEMPLOS DE USO
+-- =============================================
+
+-- Insertar una empresa con todos los campos
+INSERT INTO empresa (idEmpresa, nombre, ciudad, pais) VALUES (1, 'PRYCA', 'San Fernando', 'España');
+
+-- Insertar sin especificar la clave primaria (AUTO_INCREMENT)
+INSERT INTO empresa (nombre, ciudad, pais) VALUES ('CARREFOUR', 'San Fernando', 'España');
+
+-- Insertar varias filas de golpe
+INSERT INTO empresa (nombre, ciudad, pais) VALUES 
+	('ECI', 'Mejorada', 'España'),
+	('CARRODS', 'Oxford', 'Inglaterra'),
+	('ALCAMPO', '', ''),
+	('LIDL', 'Berlín', 'Alemania');
+
+-- Clonar todos los datos de una tabla a otra
+CREATE TABLE empresa_respaldo LIKE empresa;
+INSERT INTO empresa_respaldo SELECT * FROM empresa;
+
+-- Clonar solo algunas columnas o filas
+-- INSERT INTO empresa_respaldo (nombre, ciudad, pais)
+-- SELECT nombre, ciudad, pais FROM empresa WHERE ciudad = 'San Fernando';
+
+-- =============================================
+-- ERRORES COMUNES
+-- =============================================
+
+-- Error 1: Número de columnas y valores no coincide
+-- INSERT INTO empresa (nombre, ciudad) VALUES ('PRYCA', 'San Fernando', 'España'); -- Error
+
+-- Error 2: Violación de clave única
+-- INSERT INTO empresa (idEmpresa, nombre, ciudad, pais) VALUES (1, 'DUPLICADO', 'Madrid', 'España'); -- Error: clave duplicada
+
+-- Error 3: Tipos incompatibles
+-- INSERT INTO empresa (nombre, ciudad, pais) VALUES (123, 'Madrid', 'España'); -- Error: tipo incorrecto

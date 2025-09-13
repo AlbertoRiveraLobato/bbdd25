@@ -7,7 +7,6 @@
 -- #######################################################
 CREATE DATABASE IF NOT EXISTS comparacion_operaciones;
 USE comparacion_operaciones;
-
 -- Tabla para pruebas
 CREATE TABLE clientes (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -16,7 +15,6 @@ CREATE TABLE clientes (
     fecha_registro DATE DEFAULT (CURRENT_DATE),
     activo BOOLEAN DEFAULT true
 );
-
 CREATE TABLE pedidos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     cliente_id INT,

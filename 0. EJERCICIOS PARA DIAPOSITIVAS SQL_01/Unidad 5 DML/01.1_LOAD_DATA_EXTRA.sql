@@ -9,7 +9,6 @@
 -- Creación de la tabla
 CREATE DATABASE IF NOT EXISTS carga_datos;
 USE carga_datos;
-
 CREATE TABLE empleados (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,

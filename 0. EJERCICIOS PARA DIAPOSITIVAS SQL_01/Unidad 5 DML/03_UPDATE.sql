@@ -1,6 +1,5 @@
 CREATE DATABASE IF NOT EXISTS ejemplo_ddl;
 USE ejemplo_ddl;
-
 CREATE TABLE empleados (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50),
@@ -11,139 +10,71 @@ INSERT INTO empleados (nombre, salario) VALUES ('Ana', 2000), ('Luis', 2500);
 
 UPDATE empleados SET salario = 3000 WHERE nombre = 'Ana';
 
--- Error común: olvidar la cláusula WHERE puede modificar todos los registros
 UPDATE empleados SET 
     salario = 1000; -- ¡Cuidado! Todos los salarios se actualizan
 
--- Método NO seguro, ya que al no usar una PRIMARY_KEY, podríamos modificar TODA la tabla.
 UPDATE comandos.empresa SET
 	ciudad = "Zaragoza";
 
--- #######################################################
--- # EJEMPLOS DE UPDATE Y MERGE (UPSERT)                 #
--- # Incluye:                                           #
--- # - Creación de tablas                               #
--- # - UPDATE básico y con JOIN                         #
--- # - INSERT...ON DUPLICATE KEY UPDATE (UPSERT)        #
--- # - Casos de uso reales                              #
--- #######################################################
+-- =============================================
+-- 03_UPDATE_y_MERGE.sql
+-- =============================================
+-- Ejemplos de uso de UPDATE y MERGE/UPSERT en MySQL.
+-- Incluye: creación de base de datos y tablas, ejemplos de actualización, upsert y errores comunes.
 
-CREATE DATABASE IF NOT EXISTS operaciones_datos;
-USE operaciones_datos;
+-- CREACIÓN DE BASE DE DATOS Y TABLAS
+CREATE DATABASE IF NOT EXISTS ejemplo_update;
+USE ejemplo_update;
 
--- Tabla principal de productos
+CREATE TABLE empleados (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50),
+    salario DECIMAL(10,2)
+);
+
 CREATE TABLE productos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     sku VARCHAR(20) UNIQUE NOT NULL,
     nombre VARCHAR(100) NOT NULL,
     precio DECIMAL(10,2) DEFAULT 0,
-    stock INT DEFAULT 0,
-    fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    stock INT DEFAULT 0
 );
 
--- Tabla de actualizaciones de precios
-CREATE TABLE actualizaciones_precios (
-    sku VARCHAR(20) NOT NULL,
-    nuevo_precio DECIMAL(10,2) NOT NULL,
-    fecha_cambio DATE
+-- =============================================
+-- EJEMPLOS DE USO
+-- =============================================
+
+-- UPDATE básico
+INSERT INTO empleados (nombre, salario) VALUES ('Ana', 2000), ('Luis', 2500);
+UPDATE empleados SET salario = 3000 WHERE nombre = 'Ana';
+
+-- UPDATE de todos los registros (¡Cuidado!)
+UPDATE empleados SET salario = 1000;
+
+-- UPDATE con JOIN
+CREATE TABLE actualizaciones_salario (
+    nombre VARCHAR(50),
+    nuevo_salario DECIMAL(10,2)
 );
+INSERT INTO actualizaciones_salario VALUES ('Luis', 2700);
+UPDATE empleados e
+JOIN actualizaciones_salario a ON e.nombre = a.nombre
+SET e.salario = a.nuevo_salario;
 
--- Insertar datos iniciales
-INSERT INTO productos (sku, nombre, precio, stock) VALUES
-('SKU001', 'Laptop HP', 899.99, 15),
-('SKU002', 'Teclado Mecánico', 89.99, 30),
-('SKU003', 'Monitor 24"', 249.99, 10);
+-- MERGE/UPSERT: INSERT ... ON DUPLICATE KEY UPDATE
+INSERT INTO productos (sku, nombre, precio, stock) VALUES ('SKU001', 'Laptop', 899.99, 10)
+ON DUPLICATE KEY UPDATE precio = VALUES(precio), stock = VALUES(stock);
 
-INSERT INTO actualizaciones_precios (sku, nuevo_precio, fecha_cambio) VALUES
-('SKU001', 849.99, '2024-01-15'),
-('SKU002', 79.99, '2024-01-15'),
-('SKU004', 199.99, '2024-01-15'); -- SKU nuevo
+-- =============================================
+-- ERRORES COMUNES
+-- =============================================
 
--- ##########################################
--- # UPDATE BÁSICO                          #
--- ##########################################
+-- Error 1: Olvidar WHERE y actualizar toda la tabla
+-- UPDATE empleados SET salario = 1000; -- ¡Cuidado!
 
--- Actualizar precio de un producto específico
-UPDATE productos 
-SET precio = 829.99, fecha_actualizacion = NOW()
-WHERE sku = 'SKU001';
+-- Error 2: No tener clave única para ON DUPLICATE KEY UPDATE
+-- CREATE TABLE sin_clave (nombre VARCHAR(50));
+-- INSERT INTO sin_clave (nombre) VALUES ('Ana') ON DUPLICATE KEY UPDATE nombre = 'Ana'; -- Error
 
--- Actualizar stock después de venta
-UPDATE productos 
-SET stock = stock - 5
-WHERE sku = 'SKU002' AND stock >= 5;
-
--- ##########################################
--- # UPDATE CON JOIN                        #
--- ##########################################
-
--- Actualizar precios basado en tabla de actualizaciones
-UPDATE productos p
-JOIN actualizaciones_precios ap ON p.sku = ap.sku
-SET p.precio = ap.nuevo_precio,
-    p.fecha_actualizacion = NOW();
-
--- ##########################################
--- # UPSERT (INSERT OR UPDATE)              #
--- # MySQL usa ON DUPLICATE KEY UPDATE      #
--- ##########################################
-
--- Insertar o actualizar producto
-INSERT INTO productos (sku, nombre, precio, stock) 
-VALUES ('SKU002', 'Teclado Mecánico Premium', 99.99, 25)
-ON DUPLICATE KEY UPDATE 
-    nombre = VALUES(nombre),
-    precio = VALUES(precio),
-    stock = VALUES(stock),
-    fecha_actualizacion = NOW();
-
--- Insertar múltiples con UPSERT
-INSERT INTO productos (sku, nombre, precio, stock) VALUES
-('SKU001', 'Laptop HP Actualizada', 879.99, 20),
-('SKU005', 'Nuevo Producto', 49.99, 100)
-ON DUPLICATE KEY UPDATE 
-    nombre = VALUES(nombre),
-    precio = VALUES(precio),
-    stock = VALUES(stock),
-    fecha_actualizacion = NOW();
-
--- ##########################################
--- # CASO REAL: Sincronización de precios   #
--- ##########################################
-
--- Tabla temporal para precios externos
-CREATE TEMPORARY TABLE temp_precios_externos (
-    sku VARCHAR(20) PRIMARY KEY,
-    precio_externo DECIMAL(10,2) NOT NULL
-);
-
-INSERT INTO temp_precios_externos VALUES
-('SKU001', 859.99),
-('SKU002', 85.99),
-('SKU006', 299.99); -- Nuevo SKU
-
--- Sincronizar precios
-INSERT INTO productos (sku, nombre, precio, stock)
-SELECT tpe.sku, 'Producto Externo', tpe.precio_externo, 0
-FROM temp_precios_externos tpe
-ON DUPLICATE KEY UPDATE 
-    precio = tpe.precio_externo,
-    fecha_actualizacion = NOW();
-
--- Ver resultados
-SELECT * FROM productos ORDER BY sku;
-
--- ##########################################
--- # TRANSACCIONES CON UPDATE               #
--- ##########################################
-
-START TRANSACTION;
-
-UPDATE productos SET stock = stock - 3 WHERE sku = 'SKU001';
-UPDATE productos SET stock = stock + 3 WHERE sku = 'SKU002';
-
--- Verificar stocks antes de commit
-SELECT sku, stock FROM productos WHERE sku IN ('SKU001', 'SKU002');
-
--- COMMIT;
--- ROLLBACK; -- En caso de error
+-- Error 3: Tipos incompatibles
+-- UPDATE empleados SET salario = 'texto'; -- Error: tipo incorrecto
