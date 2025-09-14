@@ -1,17 +1,22 @@
-INSERT INTO Habitaciones (nombre) VALUES
-('Salón'),
-('Cocina'),
-('Dormitorio Principal'),
-('Dormitorio Invitados'),
-('Baño'),
-('Estudio'),
-('Terraza');
-INSERT INTO Dispositivos (nombre, tipo, ubicacion, estado, id_habitacion_FK) VALUES
-('TV Samsung', 'Televisor', 'Pared principal', TRUE, 1),
-('Aire Acondicionado', 'Climatización', 'Techo', FALSE, 1),
-('Luces LED', 'Iluminación', 'Techo', TRUE, 1),
 
+-- =============================================
+-- 51. Domótica DML_01.sql
+-- =============================================
+-- Ejemplos de DML para una base de datos de domótica.
+-- Incluye: creación de base de datos y tablas, ejemplos de inserción, actualización, borrado, carga masiva y errores comunes.
+
+-- CREACIÓN DE BASE DE DATOS Y TABLAS
+CREATE DATABASE IF NOT EXISTS DomoticaHogar;
+USE DomoticaHogar;
+
+CREATE TABLE Habitaciones (
+	id_habitacion_PK INT AUTO_INCREMENT PRIMARY KEY,
+	nombre VARCHAR(50)
+);
+
+CREATE TABLE Dispositivos (
 	id_dispositivo_PK INT AUTO_INCREMENT PRIMARY KEY,
+	nombre VARCHAR(50),
 	tipo VARCHAR(50),
 	ubicacion VARCHAR(50),
 	estado BOOLEAN,
@@ -26,7 +31,6 @@ CREATE TABLE Usuarios (
 	contraseña VARCHAR(256),
 	telefono VARCHAR(20)
 );
-
 
 CREATE TABLE AccionesProgramadas (
 	id_accion_PK INT AUTO_INCREMENT PRIMARY KEY,
