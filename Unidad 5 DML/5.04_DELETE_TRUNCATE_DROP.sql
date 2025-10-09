@@ -66,8 +66,8 @@ TRUNCATE TABLE temporal;
 -- Borra definitivamente la tabla temporal. Ya no existirá en la base de datos.
 DROP TABLE IF EXISTS temporal;
 
--- Recrear la tabla para mostrar la diferencia entre TRUNCATE y DELETE.
--- Volvemos a crear la tabla temporal con la misma estructura.
+-- Vamos a mostrar la diferencia entre TRUNCATE y DELETE. Para ello,  
+-- volvemos a crear la tabla temporal con la misma estructura.
 CREATE TABLE IF NOT EXISTS temporal (
     id INT,
     dato VARCHAR(50)
