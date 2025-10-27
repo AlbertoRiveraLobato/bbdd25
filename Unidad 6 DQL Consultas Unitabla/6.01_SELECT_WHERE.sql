@@ -54,33 +54,31 @@ SELECT * FROM empleados WHERE fecha_alta > '2022-01-01';
 
 -- 5) Muestra los empleados cuyo salario esté entre 2000 y 2500.
 SELECT * FROM empleados WHERE salario BETWEEN 2000 AND 2500;
+-- otra forma:
+-- SELECT * FROM empleados WHERE salario >= 2000 AND salario <= 2500;
 
 -- 6) Muestra los empleados cuyo nombre empiece por 'L'.
+-- SELECT * FROM empleados WHERE nombre LIKE L%; -- Error: falta comilla
 SELECT * FROM empleados WHERE nombre LIKE 'L%';
 
 -- 7) Muestra los empleados cuyo departamento sea 'Ventas' o 'Marketing'.
 SELECT * FROM empleados WHERE departamento IN ('Ventas', 'Marketing');
 -- o también:
-SELECT nombre FROM empleados WHERE (departamento ='Ventas' OR departamento = 'Marketing');
+-- SELECT nombre FROM empleados WHERE (departamento ='Ventas' OR departamento = 'Marketing');
 
 
 -- 8) Muestra los empleados que no tienen fecha de alta registrada.
+-- SELECT * FROM empleados WHERE fecha_alta = NULL; -- Error: debe usarse IS NULL
 SELECT * FROM empleados WHERE fecha_alta IS NULL;
+
 
 -- 9) Muestra los empleados cuyo salario NO esté entre 1800 y 2200.
 SELECT * FROM empleados WHERE salario NOT BETWEEN 1800 AND 2200;
+-- otra forma: 
+-- SELECT * FROM empleados WHERE salario < 1800 OR salario > 2200;
 
 -- 10) Muestra los empleados cuyo nombre contenga la letra 'a'.
 SELECT * FROM empleados WHERE nombre LIKE '%a%';
-
--- =============================================
--- ERRORES COMUNES
--- =============================================
--- Error: uso incorrecto de NULL
--- SELECT * FROM empleados WHERE fecha_alta = NULL; -- Error: debe usarse IS NULL
-
--- Error: error de sintaxis en LIKE
--- SELECT * FROM empleados WHERE nombre LIKE a%; -- Error: falta comilla
 
 -- =============================================
 -- FIN DEL ARCHIVO
