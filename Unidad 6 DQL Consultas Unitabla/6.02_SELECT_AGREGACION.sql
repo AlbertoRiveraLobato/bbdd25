@@ -51,6 +51,7 @@ SELECT COUNT(*) AS total_ventas FROM ventas;
 SELECT SUM(total) AS ingresos_totales FROM ventas;
 
 -- 3) Muestra la cantidad media vendida por producto.
+-- SELECT producto, AVG(cantidad) AS media_cantidad FROM ventas; -- Error: falta GROUP BY
 SELECT producto, AVG(cantidad) AS media_cantidad FROM ventas GROUP BY producto;
 
 -- 4) Muestra el producto más vendido (por cantidad).
@@ -79,19 +80,30 @@ SELECT SUM(total) AS total_con_o FROM ventas WHERE producto LIKE '%o%';
 -- o por separado cada producto:
 SELECT SUM(total), producto FROM ventas WHERE producto LIKE '%o%' GROUP BY producto;
 
+-- 11.1) Muestra el numero total de ventas de productos cuyo nombre contiene la letra 'o'.
+SELECT COUNT(total) FROM ventas WHERE producto LIKE '%o%';
+
 -- 12) Muestra la suma de ventas de productos cuyo nombre empieza por 'M'.
 SELECT SUM(total) AS total_m FROM ventas WHERE producto LIKE 'M%';
 -- o por separado cada producto:
 SELECT SUM(total), producto FROM ventas WHERE producto LIKE 'M%' GROUP BY producto;
 
--- =============================================
--- ERRORES COMUNES
--- =============================================
--- Error: uso incorrecto de GROUP BY
--- SELECT producto, SUM(total) FROM ventas; -- Error: falta GROUP BY
+-- 13.1) Muestra el producto, la cantidad total vendida y el precio medio por producto. 
+    -- Esta es una consulta en la que hay 3 columnas a mostrar, 
+    -- y además hay un GROUP BY, de manera que se deben agrupar los resultados por una de las columnas mostradas.
+    -- Como estamos agrupando una de las 3 columnas, las otras dos deben ser funciones de agregación.
+SELECT producto, SUM(cantidad) AS total_vendida, AVG(precio) AS precio_medio
+FROM ventas
+GROUP BY producto;
 
--- Error: uso incorrecto de HAVING
--- SELECT * FROM ventas HAVING total > 50; -- Error: HAVING sólo tras GROUP BY
+-- 13.2) Muestra el producto, el total de ventas con un descuento de 10 euros aplicado,
+-- y una columna que indique 'Venta realizada' si el total de ventas es mayor de 50 euros, o 'Venta baja' 
+-- en otro caso.
+SELECT producto, SUM(total) - 10 AS total_con_descuento,
+       CASE WHEN SUM(total) > 50 THEN 'Venta realizada' ELSE 'Venta baja' END AS tipo_venta
+FROM ventas
+GROUP BY producto;
+
 
 -- =============================================
 -- FIN DEL ARCHIVO
