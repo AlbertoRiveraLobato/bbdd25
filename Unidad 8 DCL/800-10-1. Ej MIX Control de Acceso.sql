@@ -9,14 +9,13 @@
 -- ENUNCIADOS PARA RESOLVER
 -- =============================
 /*
-1) Crea la base de datos y las tablas empleados y departamentos, con las claves y restricciones adecuadas.
-2) Inserta algunos registros de ejemplo en ambas tablas.
-3) Asegúrate de eliminar los usuarios creados para limpiar el entorno.
-4) Crea varios usuarios con diferentes hosts y contraseñas.
-5) Asigna privilegios SELECT e INSERT sobre la tabla empleados a los usuarios creados, diferenciando por host.
-6) Revoca el privilegio SELECT sobre empleados a uno de los usuarios.
-7) Consulta la tabla mysql.user para ver los usuarios creados y sus hosts.
-8) Elimina los usuarios creados para limpiar el entorno.
+-- 1) Crea la base de datos y las tablas empleados y departamentos, con las claves y restricciones adecuadas.
+-- 2) Inserta algunos registros de ejemplo en ambas tablas.
+-- 3) Asegúrate de eliminar los usuarios creados para limpiar el entorno.
+-- 4) Crea varios usuarios con diferentes hosts y contraseñas.
+-- 5) Asigna privilegios SELECT e INSERT sobre la tabla empleados al usuario_prueba@127.0.0.1
+-- 6) Revoca el privilegio SELECT sobre empleados al usuario_prueba@127.0.0.1
+-- 7) Ahora vamos a eliminar los usuarios creados para limpiar el entorno.
 */
 
 -- 1) Crea la base de datos y las tablas empleados y departamentos, con las claves y restricciones adecuadas.
